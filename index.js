@@ -1,12 +1,8 @@
 import * as d3 from "d3";
-
-async function fetchML() {
-  let response = await fetch("/predict");
-  let data = await response.json();
-  return data;
-}
+import $ from "jquery";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const container = d3.select("#container");
   const hoodDropdown = d3.select("#neighborhood");
   const roomsDropdown = d3.select("#rooms");
   const bathroomsDropdown = d3.select("#bathrooms");
@@ -204,7 +200,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   d3.select("#apt-listing").on("submit", () => {
+    const formData = new FormData(document.getElementById("apt-listing"));
     d3.event.preventDefault();
-    fetch;
+    $.ajax({
+      url: "/predict",
+      data: formData,
+      contentType: false,
+      type: "GET"
+    }).then(payload => {
+      container.html(payload);
+    });
   });
 });
