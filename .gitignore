@@ -1,1 +1,3 @@
 /datasets/broker_interactions.csv
+/node_modules
+/__pycache__
