@@ -79,6 +79,7 @@ def main(argv):
 
 def run(request_args):
     parser.add_argument('--custom_test_data', default=request_args, type=list, help='User provided housing data')
+    tf.logging.set_verbosity(tf.logging.INFO)
 
     # f = flags.FLAGS
 
