@@ -11,10 +11,10 @@ subprocess.Popen(['pkill', '-f', 'tensorboard'])
 subprocess.Popen(['tensorboard', '--logdir', log_dir])
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size', default=100, type=int, help='batch size')
+parser.add_argument('--batch_size', default=200, type=int, help='batch size')
 parser.add_argument('--train_steps', default=1000,
                     type=int, help='number of training steps')
-parser.add_argument('--price_norm_factor', default=1000.,
+parser.add_argument('--price_norm_factor', default=100.,
                     type=float, help='price normalization factor')
 
 

@@ -65,7 +65,7 @@ def raw_dataframe():
     return df
 
 
-def load_data(y_name="price", train_fraction=0.7, seed=None):
+def load_data(y_name="price", train_fraction=0.8, seed=None):
     data = raw_dataframe()
 
     # Drop rows with any missing data
