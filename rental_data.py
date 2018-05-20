@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import dateutil
+import string
 
 dtypes = {
     'unit_id': np.int32,  # 0
@@ -37,11 +38,29 @@ dtypes = {
 }
 
 
+def convNa(val):
+    if val is None or val == '':
+        return '?'
+    return val
+
+
+def convFloor(floor):
+    if floor != '?':
+        floor = floor.replace(string.ascii_letters, '')
+    return floor
+
+
 def raw_dataframe():
-    df = pd.read_csv('historical_rentals.csv',
+    df = pd.read_csv('hr_sanitized.csv',
                      dtype=dtypes,
                      date_parser=dateutil.parser.parser,
-                     usecols=[5, 7, 11, 17, 18, 24])
+                     parse_dates=True,
+                     na_values='?',
+                     #  converters={'floor': convNa,
+                     #              'price': convNa,
+                     #              'square_footage': convNa},
+                     #  usecols=[5, 10, 11, 16, 17, 18, 20, 24])
+                     usecols=list(range(1, 6)))
 
     return df
 
@@ -55,17 +74,62 @@ def load_data(y_name="price", train_fraction=0.7, seed=None):
     # Shuffle the data
     np.random.seed(seed)
 
-    # Allocate a random portion (70%) of all data to training set, with rest going to test set
+    # Randomly allocate a portion (70%) of all data to training set, with the rest going to test set
     x_train = data.sample(frac=train_fraction, random_state=seed)
     # index = row number
     x_test = data.drop(x_train.index)
 
-    # Extract the label from the features DataFrame.
+    # Remove prices from the features DataFrames.
     y_train = x_train.pop(y_name)
     y_test = x_test.pop(y_name)
 
-    # x_train = features, y_train = price
+    # x_train = features [training], y_train = price [training]
+    # x_test  = features [test]    , y_test  = price [test]
     return (x_train, y_train), (x_test, y_test)
 
 
-load_data()
+def features_columns():
+    neighborhood = tf.feature_column.categorical_column_with_hash_bucket('neighborhood',
+                                                                         200)
+
+    layout = tf.feature_column.categorical_column_with_vocabulary_list('layout',
+                                                                       vocabulary_list=['Flex 2',
+                                                                                        '1 Bedroom w/ HO',
+                                                                                        '3 Bedroom',
+                                                                                        '1 Bedroom',
+                                                                                        '6+ Bedroom',
+                                                                                        'Jr 1 Bedroom',
+                                                                                        '5 Bedroom',
+                                                                                        'Flex 3',
+                                                                                        'Flex 4',
+                                                                                        'Building',
+                                                                                        '4 Bedroom w/ HO',
+                                                                                        '3 Bedroomw/ HO',
+                                                                                        'Studio',
+                                                                                        '2 Bedroom w/ HO',
+                                                                                        'Loft',
+                                                                                        'Alcove Studio',
+                                                                                        'Jr 4',
+                                                                                        '4 Bedroom',
+                                                                                        '2 Bedroom'])
+    bathrooms = tf.feature_column.categorical_column_with_vocabulary_list('bathrooms',
+                                                                          vocabulary_list=['2 Bathroom',
+                                                                                           '1.5 Bathroom',
+                                                                                           '4 Bathroom',
+                                                                                           '3.5 Bathroom',
+                                                                                           '3 Bathroom',
+                                                                                           '1 Bathroom',
+                                                                                           '4.5 Bathroom',
+                                                                                           '2.5 Bathroom'])
+
+    feature_columns = [
+        tf.feature_column.embedding_column(neighborhood, 3),
+        tf.feature_column.indicator_column(layout),
+        tf.feature_column.indicator_column(bathrooms),
+
+        tf.feature_column.numeric_column('symboling'),
+        tf.feature_column.numeric_column('square_footage'),
+        tf.feature_column.numeric_column('price'),
+    ]
+
+    return feature_columns
