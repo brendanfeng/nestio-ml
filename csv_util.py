@@ -32,9 +32,12 @@ def generate_categorical_columns(filename, categorical_columns):
 def run_all():
     original_header = ['unit_id', 'street_address', 'city', 'state', 'postal_code', 'neighborhood', 'location_x', 'location_y', 'cross_street_a', 'cross_street_b', 'floor', 'price', 'months_free_incentive_advertised', 'incentives_and_or', 'broker_incentive_type',
                        'broker_incentive_quantity', 'listed_at', 'rented_at', 'layout', 'bathrooms', 'square_footage', 'date_available', 'min_lease_term', 'max_lease_term', 'pet_policy', 'unit_amenities', 'building_amenities', 'unit_description', 'photos', 'floorplans']
+
+    # Customizable
     desired_header = ['neighborhood', 'price', 'layout', 'bathrooms', 'square_footage']
     desired_columns = [original_header.index(h) for h in desired_header]
 
+    # Customizable
     categorical_columns = [desired_header.index('neighborhood'),
                            desired_header.index('layout'),
                            desired_header.index('bathrooms')]

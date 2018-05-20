@@ -65,7 +65,7 @@ def raw_dataframe():
     return df
 
 
-def load_data(y_name="price", train_fraction=0.7, seed=None):
+def load_data(y_name="price", train_fraction=0.8, seed=None):
     data = raw_dataframe()
 
     # Drop rows with any missing data
@@ -74,7 +74,7 @@ def load_data(y_name="price", train_fraction=0.7, seed=None):
     # Shuffle the data
     np.random.seed(seed)
 
-    # Randomly allocate a portion (70%) of all data to training set, with the rest going to test set
+    # Randomly allocate a portion of all data to training set, with the rest going to test set
     x_train = data.sample(frac=train_fraction, random_state=seed)
 
     # index = internal row number
