@@ -51,7 +51,7 @@ def convFloor(floor):
 
 
 def raw_dataframe():
-    df = pd.read_csv('hr_sanitized.csv',
+    df = pd.read_csv('./datasets/hr_sanitized.csv',
                      dtype=dtypes,
                      date_parser=dateutil.parser.parser,
                      parse_dates=True,
@@ -60,7 +60,7 @@ def raw_dataframe():
                      #              'price': convNa,
                      #              'square_footage': convNa},
                      #  usecols=[5, 10, 11, 16, 17, 18, 20, 24])
-                     usecols=list(range(1, 6)))
+                     )
 
     return df
 
@@ -69,14 +69,15 @@ def load_data(y_name="price", train_fraction=0.7, seed=None):
     data = raw_dataframe()
 
     # Drop rows with any missing data
-    data = data.dropna()
+    # data = data.dropna()
 
     # Shuffle the data
     np.random.seed(seed)
 
     # Randomly allocate a portion (70%) of all data to training set, with the rest going to test set
     x_train = data.sample(frac=train_fraction, random_state=seed)
-    # index = row number
+
+    # index = internal row number
     x_test = data.drop(x_train.index)
 
     # Remove prices from the features DataFrames.
@@ -126,10 +127,7 @@ def features_columns():
         tf.feature_column.embedding_column(neighborhood, 3),
         tf.feature_column.indicator_column(layout),
         tf.feature_column.indicator_column(bathrooms),
-
-        tf.feature_column.numeric_column('symboling'),
         tf.feature_column.numeric_column('square_footage'),
-        tf.feature_column.numeric_column('price'),
     ]
 
     return feature_columns
