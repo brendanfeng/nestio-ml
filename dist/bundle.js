@@ -292,8 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
       data: formData,
       contentType: false,
       type: "GET"
-    }).then(payload => {
-      container.html(payload);
+    }).then(price => {
+      container.html(price);
     });
   });
 });
