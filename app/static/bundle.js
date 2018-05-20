@@ -87,7 +87,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#container");
+  const container = document.getElementById("container");
   const hoodDropdown = d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#neighborhood");
   const roomsDropdown = d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#rooms");
   const bathroomsDropdown = d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#bathrooms");
@@ -265,6 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "2.5 Bathroom"
   ];
 
+  neighborhoods.sort();
+  rooms.sort();
+  bathrooms.sort();
+
   neighborhoods.map(neighborhood => {
     hoodDropdown
       .append("option")
@@ -284,16 +288,39 @@ document.addEventListener("DOMContentLoaded", () => {
       .html(bathroom);
   });
 
-  d3__WEBPACK_IMPORTED_MODULE_0__["select"]("#apt-listing").on("submit", () => {
-    const formData = new FormData(document.getElementById("apt-listing"));
-    d3__WEBPACK_IMPORTED_MODULE_0__["event"].preventDefault();
+  document.getElementById("apt-listing").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const neighborhood = document.getElementById("neighborhood").value;
+    const layout = document.getElementById("rooms").value;
+    const bathrooms = document.getElementById("bathrooms").value;
+    const square_footage = document.getElementById("square_footage").value;
+
+    document.getElementById("neighborhood").disabled = true;
+    document.getElementById("rooms").disabled = true;
+    document.getElementById("bathrooms").disabled = true;
+    document.getElementById("square_footage").disabled = true;
+    document.getElementById("loader").style.display = "flex";
+
     jquery__WEBPACK_IMPORTED_MODULE_1___default.a.ajax({
       url: "/predict",
-      data: formData,
+      data: {
+        neighborhood,
+        layout,
+        bathrooms,
+        square_footage
+      },
       contentType: false,
       type: "GET"
     }).then(price => {
-      container.html(price);
+      console.log(price);
+      container.innerHTML = "$" + parseFloat(price).toFixed(2);
+      document.getElementById("neighborhood").disabled = false;
+      document.getElementById("rooms").disabled = false;
+      document.getElementById("bathrooms").disabled = false;
+      document.getElementById("square_footage").disabled = false;
+
+      document.getElementById("loader").style.display = "none";
     });
   });
 });

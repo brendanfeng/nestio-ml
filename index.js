@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import $ from "jquery";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = d3.select("#container");
+  const container = document.getElementById("container");
   const hoodDropdown = d3.select("#neighborhood");
   const roomsDropdown = d3.select("#rooms");
   const bathroomsDropdown = d3.select("#bathrooms");
@@ -180,6 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "2.5 Bathroom"
   ];
 
+  neighborhoods.sort();
+  rooms.sort();
+  bathrooms.sort();
+
   neighborhoods.map(neighborhood => {
     hoodDropdown
       .append("option")
@@ -199,16 +203,39 @@ document.addEventListener("DOMContentLoaded", () => {
       .html(bathroom);
   });
 
-  d3.select("#apt-listing").on("submit", () => {
-    const formData = new FormData(document.getElementById("apt-listing"));
-    d3.event.preventDefault();
+  document.getElementById("apt-listing").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const neighborhood = document.getElementById("neighborhood").value;
+    const layout = document.getElementById("rooms").value;
+    const bathrooms = document.getElementById("bathrooms").value;
+    const square_footage = document.getElementById("square_footage").value;
+
+    document.getElementById("neighborhood").disabled = true;
+    document.getElementById("rooms").disabled = true;
+    document.getElementById("bathrooms").disabled = true;
+    document.getElementById("square_footage").disabled = true;
+    document.getElementById("loader").style.display = "flex";
+
     $.ajax({
       url: "/predict",
-      data: formData,
+      data: {
+        neighborhood,
+        layout,
+        bathrooms,
+        square_footage
+      },
       contentType: false,
       type: "GET"
     }).then(price => {
-      container.html(price);
+      console.log(price);
+      container.innerHTML = "$" + parseFloat(price).toFixed(2);
+      document.getElementById("neighborhood").disabled = false;
+      document.getElementById("rooms").disabled = false;
+      document.getElementById("bathrooms").disabled = false;
+      document.getElementById("square_footage").disabled = false;
+
+      document.getElementById("loader").style.display = "none";
     });
   });
 });

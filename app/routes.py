@@ -1,12 +1,13 @@
 from app import app
 import regression
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 import numpy as np
 
-@app.route('/')
-@app.route('/index')
-def index():
-    return "Hello, World!"
+# @app.route('/')
+# @app.route('/index')
+@app.route('/<string:page_name>/')
+def render_static(page_name):
+    return render_template('%s.html' % page_name)
 
 
 @app.route('/predict')

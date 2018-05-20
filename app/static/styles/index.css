@@ -1,0 +1,85 @@
+body {
+  font-family: helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#apt-listing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50vw;
+  height: 50vh;
+}
+select, input {
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  font-size: 20px;
+  background: white;
+  color: black;
+  padding: 5px;
+  border-radius: 0px;
+  margin: 5px;
+  height: 44px;
+  border: 1px solid lightgray;
+}
+select:active {
+  outline: none;
+}
+input:focus {
+  outline: none;
+}
+#container {
+  margin-top: 15px;
+  font-size: 20px;
+  color: red;
+  text-align: center;
+  display: flex;
+  width: 50vw;
+  justify-content: center;
+}
+button {
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+  text-align: center;
+  color: blue;
+  background-color: lightgray;
+  transition: 1s;
+}
+button:hover {
+  background-color: gray;
+}
+button:active {
+  outline: none;
+}
+
+#loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  display: none;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -3,16 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href="./index.css">
-    <script src="./dist/bundle.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}">
+    <script src="{{ url_for('static', filename='bundle.js') }}"></script>
   </head>
   <body>
     <form id="apt-listing">
       <select id="neighborhood" type="text" name="neighborhood"></select>
       <select id="rooms" type="text" name="rooms"></select>
       <select id="bathrooms" type="text" name="bathrooms"></select>
+      <input id="square_footage" type="number" name="square_footage" placeholder="Enter square ft"></input>
       <button type="submit" name="button">Submit!</button>
     </form>
+    <div id="loader" disabled></div>
     <div id="container"></div>
   </body>
 </html>
